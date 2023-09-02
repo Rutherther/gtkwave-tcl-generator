@@ -1,4 +1,4 @@
-# Gktwave TCL generator
+# Gtkwave TCL generator
 This is a simple generator of tcl files that may be used along with gtkwave.
 The generator generates tcl according to a testbench file, with rules that may be
 specified inside of comments.
@@ -40,7 +40,6 @@ Options:
 | color      | normal, red, orange, yellow, green, blue, indigo, violet, cycle | Sets the color of the signal.                                        |
 | format     | hex, decimal signed decimal, binary                             | Sets the display format.                                             |
 | add signal | path to the signal                                              | Adds the given signal, use dot notation. Separate options with comma |
-|------------|-----------------------------------------------------------------|----------------------------------------------------------------------|
 
 # Example usage
 
