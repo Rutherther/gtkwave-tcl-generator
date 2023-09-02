@@ -62,9 +62,9 @@ impl CommentParser {
             "yellow" => DisplayColor::Yellow,
             "green" => DisplayColor::Green,
             "blue" => DisplayColor::Blue,
-            "Indigo" => DisplayColor::Indigo,
-            "Violet" => DisplayColor::Violet,
-            "Cycle" => DisplayColor::Cycle,
+            "indigo" => DisplayColor::Indigo,
+            "violet" => DisplayColor::Violet,
+            "cycle" => DisplayColor::Cycle,
             _ => return None,
         })
     }
