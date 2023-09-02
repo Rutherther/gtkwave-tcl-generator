@@ -1,4 +1,4 @@
-use std::{fmt::Display, slice::Iter};
+use std::fmt::Display;
 
 #[derive(Eq, PartialEq, Clone, Copy)]
 pub enum DisplayOption {

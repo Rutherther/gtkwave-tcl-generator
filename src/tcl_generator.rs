@@ -1,6 +1,6 @@
 use string_builder::Builder;
 
-use crate::display_elements::{DisplayColor, DisplayFormat, DisplayOption};
+use crate::display_elements::{DisplayColor, DisplayFormat};
 
 pub struct TclGenerator {
     signals: Vec<(String, Option<DisplayColor>, Option<DisplayFormat>)>,
@@ -15,7 +15,12 @@ impl TclGenerator {
         }
     }
 
-    pub fn add_signal(&mut self, signal: String, color: Option<DisplayColor>, format: Option<DisplayFormat>) -> &mut Self {
+    pub fn add_signal(
+        &mut self,
+        signal: String,
+        color: Option<DisplayColor>,
+        format: Option<DisplayFormat>,
+    ) -> &mut Self {
         self.signals.push((signal, color, format));
         self
     }

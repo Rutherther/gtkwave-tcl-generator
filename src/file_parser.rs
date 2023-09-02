@@ -1,7 +1,7 @@
 use vhdl_lang::{
     data::{ContentReader, Contents},
     syntax::{
-        tokens::{Comment, Kind, TokenStream, Tokenizer},
+        tokens::{Kind, TokenStream, Tokenizer},
         Symbols,
     },
     Diagnostic, Source,
@@ -193,8 +193,8 @@ impl FileParser {
         for signal_name in signal_names {
             signals.push(ParsedSignal {
                 name: signal_name,
-                signal_type,
-                comment,
+                signal_type: signal_type.clone(),
+                comment: comment.clone(),
             });
         }
 

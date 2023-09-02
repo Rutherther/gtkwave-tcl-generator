@@ -31,9 +31,9 @@ impl CommentParser {
             "omit" => Operation::UpdateContext(ContextUpdate::SetOmit(true)),
             "empty" => Operation::AddEmpty,
             "reset" => Operation::UpdateContext(ContextUpdate::Reset),
-            _ if token.starts_with("add signal ") => Operation::AddSignal(
-                token["add signal ".len()..].to_owned(),
-            ),
+            _ if token.starts_with("add signal ") => {
+                Operation::AddSignal(token["add signal ".len()..].to_owned())
+            }
             _ if token.starts_with("format ") => Operation::UpdateContext(
                 ContextUpdate::UpdateFormat(Self::parse_format(&token["format ".len()..])),
             ),
@@ -67,5 +67,5 @@ impl CommentParser {
             "Cycle" => DisplayColor::Cycle,
             _ => return None,
         })
-   }
+    }
 }
