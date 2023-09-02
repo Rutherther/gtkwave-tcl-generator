@@ -21,7 +21,7 @@ impl CommentParser {
     pub fn parse_comment(comment: &str) -> Vec<Operation> {
         comment
             .split(['\n', ','].as_ref())
-            .map(|token| Self::parse_token(token))
+            .map(|token| Self::parse_token(token.trim()))
             .filter(|operation| operation.is_some())
             .into_iter()
             .map(|operation| operation.unwrap())
