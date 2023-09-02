@@ -29,7 +29,6 @@ struct Cli {
 fn main() {
     let cli = Cli::parse();
     let find_wildcard = cli.folder.to_str().unwrap().to_owned() + "/**/*.vhd";
-    println!("Going to look into {find_wildcard}");
 
     let matching_files = glob(&find_wildcard).unwrap();
 
@@ -41,7 +40,7 @@ fn main() {
 
         let source = Source::from_latin1_file(file.as_path()).unwrap();
         let contents = source.contents();
-        let mut entities = FileParser::parse_file(&source, &contents, &symbols).unwrap();
+        let entities = FileParser::parse_file(&source, &contents, &symbols).unwrap();
 
         for entity in entities {
             if entity.name() != cli.testbench {
@@ -132,22 +131,24 @@ fn generate_tcl(entity: ParsedEntity) -> String {
                         add_signal(
                             &mut generator,
                             signal.clone(),
+                            None,
                             Some(context_operations),
                             &context,
+                            true
                         );
+                    } else {
+                        let updates = operations.iter().filter_map(|op| match op {
+                            Operation::UpdateContext(update) => Some(update),
+                            Operation::AddEmpty => {
+                                generator.add_empty();
+                                None
+                            }
+                            _ => panic!(),
+                        });
+                        context.update(updates);
                     }
-                } else {
-                    let updates = operations.iter().filter_map(|op| match op {
-                        Operation::UpdateContext(update) => Some(update),
-                        Operation::AddEmpty => {
-                            generator.add_empty();
-                            None
-                        }
-                        _ => panic!(),
-                    });
-                    context.update(updates);
                 }
-            }
+            },
             ParsedArchitecturePart::Signal(signal) => {
                 let mut operations = None;
 
@@ -158,8 +159,10 @@ fn generate_tcl(entity: ParsedEntity) -> String {
                 add_signal(
                     &mut generator,
                     signal.name().to_owned(),
+                    Some(signal.signal_type()),
                     operations.as_ref().map(|x| x.iter()),
                     &context,
+                    false
                 );
             }
         }
@@ -171,10 +174,12 @@ fn generate_tcl(entity: ParsedEntity) -> String {
 fn add_signal<'a>(
     generator: &mut TclGenerator,
     signal: String,
+    signal_type: Option<&str>,
     operations: Option<impl Iterator<Item = &'a Operation>>,
     context: &Context,
+    override_omit: bool
 ) {
-    let (color, format, omit) = if let Some(operations) = operations {
+    let (color, mut format, omit) = if let Some(operations) = operations {
         let updates = operations.into_iter().filter_map(|op| {
             if let Operation::UpdateContext(update) = op {
                 Some(update)
@@ -188,5 +193,11 @@ fn add_signal<'a>(
         context.decompose()
     };
 
-    generator.add_signal(signal, color, format);
+    if format.is_none() && signal_type.is_some() && signal_type.unwrap() == "std_logic_vector" {
+        format = Some(DisplayFormat::Binary);
+    }
+
+    if override_omit || !omit {
+        generator.add_signal(signal, color, format);
+    }
 }
