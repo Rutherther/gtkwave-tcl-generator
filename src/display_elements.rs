@@ -1,13 +1,13 @@
 use std::fmt::Display;
 
-#[derive(Eq, PartialEq, Clone, Copy)]
+#[derive(Eq, PartialEq, Clone, Copy, Debug)]
 pub enum DisplayOption {
     Color(DisplayColor),
     Format(DisplayFormat),
     Omit,
 }
 
-#[derive(Eq, PartialEq, Copy, Clone)]
+#[derive(Eq, PartialEq, Copy, Clone, Debug)]
 pub enum DisplayColor {
     Normal,
     Red,
@@ -40,7 +40,7 @@ impl Display for DisplayColor {
     }
 }
 
-#[derive(Eq, PartialEq, Copy, Clone)]
+#[derive(Eq, PartialEq, Copy, Clone, Debug)]
 pub enum DisplayFormat {
     Hex,
     Decimal,

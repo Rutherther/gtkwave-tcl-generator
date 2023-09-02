@@ -1,11 +1,13 @@
 use crate::display_elements::{DisplayColor, DisplayFormat};
 
+#[derive(Eq, PartialEq, Debug)]
 pub enum Operation {
     UpdateContext(ContextUpdate),
     AddEmpty,
     AddSignal(String),
 }
 
+#[derive(Eq, PartialEq, Debug)]
 pub enum ContextUpdate {
     UpdateColor(Option<DisplayColor>),
     UpdateFormat(DisplayFormat),
