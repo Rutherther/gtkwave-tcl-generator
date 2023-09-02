@@ -1,11 +1,9 @@
 use string_builder::Builder;
 
-use crate::display_elements::{DisplayColor, DisplayFormat, Signal, DisplayOption};
-
+use crate::display_elements::{DisplayColor, DisplayFormat};
 
 pub struct TclGenerator {
     signals: Vec<(String, Option<DisplayColor>, Option<DisplayFormat>)>,
-    zoom_out: bool,
     signal_prefix: String,
 }
 
@@ -13,38 +11,22 @@ impl TclGenerator {
     pub fn new(signal_prefix: String) -> Self {
         Self {
             signals: vec![],
-            zoom_out: false,
             signal_prefix,
         }
     }
 
-    pub fn add_signal(&mut self, signal: &Signal) -> &mut Self {
-        let mut color = None;
-        let mut format = None;
-
-        for option in signal.options() {
-            match option {
-                DisplayOption::Omit => return self,
-                DisplayOption::Color(c) => {
-                    color = Some(c.clone());
-                },
-                DisplayOption::Format(f) => {
-                    format = Some(f.clone());
-                }
-            }
-        }
-
-        self.signals.push((signal.name().to_owned(), color, format));
+    pub fn add_signal(
+        &mut self,
+        signal: String,
+        color: Option<DisplayColor>,
+        format: Option<DisplayFormat>,
+    ) -> &mut Self {
+        self.signals.push((signal, color, format));
         self
     }
 
     pub fn add_empty(&mut self) -> &mut Self {
         self.signals.push(("".to_owned(), None, None));
-        self
-    }
-
-    pub fn zoom_out(&mut self) -> &mut Self {
-        self.zoom_out = true;
         self
     }
 
@@ -56,7 +38,6 @@ impl TclGenerator {
         builder.append("gtkwave::/View/Show_Filled_High_Values 1\n");
         builder.append("gtkwave::/View/Show_Wave_Highlight 1\n");
         builder.append("gtkwave::/View/Show_Mouseover 1\n");
-        builder.append("gtkwave::/View/Left_Justified_Signals 1\n");
 
         for signal in self.signals {
             if signal.0 == "" {
@@ -84,9 +65,7 @@ impl TclGenerator {
             }
         }
 
-        if self.zoom_out {
-            builder.append("gtkwave::/Time/Zoom/Zoom_Best_Fit\n");
-        }
+        builder.append("gtkwave::/Time/Zoom/Zoom_Best_Fit\n");
 
         builder.string().unwrap()
     }
