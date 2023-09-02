@@ -60,7 +60,7 @@ architecture tb of tb_spi_slave is
   signal rx_data : std_logic_vector(7 downto 0);
   -- reset
 
-  signal gated_si : std_logic;
+  signal gated_si : std_logic; -- color red
   signal so : std_logic;
   signal cs_n : std_logic := '1';
 
