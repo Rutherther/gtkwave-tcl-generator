@@ -155,6 +155,9 @@ impl FileParser {
             }
         }
 
+        stream.skip_until(|k| k == Kind::Architecture)?;
+        stream.skip_until(|k| k == Kind::SemiColon)?;
+
         let architecture = ParsedArchitecture {
             name: architecture_name,
             entity_name,
@@ -205,6 +208,10 @@ impl FileParser {
         stream.expect_kind(Kind::Entity)?;
 
         let name = Self::parse_identifier(stream)?;
+
+        stream.skip_until(|k| k == Kind::Entity)?;
+        stream.skip_until(|k| k == Kind::SemiColon)?;
+
         Ok(ParsedEntity {
             name,
             architecture: None,
